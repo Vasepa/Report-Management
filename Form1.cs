@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using report_management;
+using Report_Management;  // ← Добавлено!
 
-namespace Report_Management  // Изменено
+namespace Report_Management
 {
     public partial class Form1 : Form
     {
-        private ReportManager reportManager = null!;
-        private TextBox titleTextBox = null!;
-        private TextBox contentTextBox = null!;
-        private Button addReportButton = null!;
-        private Button removeReportButton = null!;
-        private Button updateReportButton = null!;
-        private ListBox reportsListBox = null!;
-        private Label titleLabel = null!;
-        private Label contentLabel = null!;
+        private ReportManager reportManager;
+        private TextBox titleTextBox;
+        private TextBox contentTextBox;
+        private Button addReportButton;
+        private Button removeReportButton;
+        private Button updateReportButton;
+        private ListBox reportsListBox;
+        private Label titleLabel;
+        private Label contentLabel;
 
         public Form1()
         {
@@ -42,7 +44,6 @@ namespace Report_Management  // Изменено
             {
                 Location = new System.Drawing.Point(85, 12),
                 Width = 300,
-                PlaceholderText = "Введите название отчёта"
             };
 
             contentLabel = new Label
@@ -59,7 +60,6 @@ namespace Report_Management  // Изменено
                 Height = 120,
                 Multiline = true,
                 ScrollBars = ScrollBars.Both,
-                PlaceholderText = "Введите содержание отчёта"
             };
 
             addReportButton = new Button
@@ -133,9 +133,9 @@ namespace Report_Management  // Изменено
         private Report GetSelectedReport()
         {
             if (reportsListBox.SelectedIndex == -1)
-                return null!;
+                return null;
 
-            string selectedItem = reportsListBox.SelectedItem.ToString()!;
+            string selectedItem = reportsListBox.SelectedItem.ToString();
             int separatorIndex = selectedItem.LastIndexOf(" - ");
 
             if (separatorIndex != -1)
@@ -150,7 +150,7 @@ namespace Report_Management  // Изменено
                 }
             }
 
-            return null!;
+            return null;
         }
 
         private void AddReportButton_Click(object sender, EventArgs e)
