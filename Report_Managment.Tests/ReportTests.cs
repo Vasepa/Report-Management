@@ -1,43 +1,66 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using report_management;
 using System;
+using System.IO;
 
 namespace Report_Management.Tests
 {
-    //+ тесты
+    
     [TestClass]
     public class ReportTests
     {
-        [TestMethod]
-        public void Constructor_SetsTitleAndContentAndDate()
+        private const string OriginalFile = "reports.txt";
+        private const string BackupFile = "reports.txt.backup";
+
+        [TestInitialize]
+        public void Setup()
         {
-            // Подготовка
-            string title = "Мой отчёт";
-            string content = "Текст отчёта...";
-            DateTime date = new DateTime(2026, 4, 23);
+            if (File.Exists(OriginalFile))
+            {
+                if (File.Exists(BackupFile))
+                    File.Delete(BackupFile);
+                File.Move(OriginalFile, BackupFile);
+            }
+        }
 
-            // Действие
-            Report report = new Report(title, content, date);
+        [TestCleanup]
+        public void Teardown()
+        {
+            if (File.Exists(OriginalFile))
+                File.Delete(OriginalFile);
+            if (File.Exists(BackupFile))
+                File.Move(BackupFile, OriginalFile);
+        }
 
-            // Проверка
-            Assert.AreEqual(title, report.Title);
-            Assert.AreEqual(content, report.Content);
-            Assert.AreEqual(date, report.CreationDate);
+        // +
+        [TestMethod]
+        public void AddReport_AddsReportToList()
+        {
+            var manager = new ReportManager();
+            var report = new Report("Название", "Содержание", DateTime.Now);
+            manager.AddReport(report);
+            Assert.AreEqual(1, manager.Reports.Count);
         }
 
         [TestMethod]
-        public void CanChangeTitleAndContent()
+        public void RemoveReport_RemovesFromList()
         {
-            // Подготовка
-            Report report = new Report("Старое", "Старое содержание", DateTime.Now);
-
-            // Действие
-            report.Title = "Новое название";
-            report.Content = "Новое содержание";
-
-            // Проверка
-            Assert.AreEqual("Новое название", report.Title);
-            Assert.AreEqual("Новое содержание", report.Content);
+            var manager = new ReportManager();
+            var report = new Report("Удалить", "Данные", DateTime.Now);
+            manager.AddReport(report);
+            manager.RemoveReport(report);
+            Assert.AreEqual(0, manager.Reports.Count);
         }
+
+
+        // -
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void AddReport_NullReport_ThrowsArgumentNullException()
+        {
+            var manager = new ReportManager();
+            manager.AddReport(null);
+        }
+
     }
 }
